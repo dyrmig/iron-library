@@ -2,6 +2,10 @@ package com.littlecodewarriors.ironlibrary.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+
 @Entity
 public class Issue {
     @Id
@@ -17,13 +21,17 @@ public class Issue {
     public Issue() {
     }
 
-    public Issue(String issueDate, String returnDate, Student issueStudent, Book issueBook) {
-        this.issueDate = issueDate;
-        this.returnDate = returnDate;
+    public Issue(Student issueStudent, Book issueBook) {
+        this.issueDate = "asdsad";//currentDate(0);
+        this.returnDate = currentDate();
         this.issueStudent = issueStudent;
         this.issueBook = issueBook;
     }
-
+    public String currentDate(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+        LocalDate localDate = LocalDate.now();//.plusDays(additionalDays);
+        return dtf.format(localDate);
+    }
     public Integer getId() {
         return id;
     }
