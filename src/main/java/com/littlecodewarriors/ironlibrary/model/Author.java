@@ -2,6 +2,8 @@ package com.littlecodewarriors.ironlibrary.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Author {
     @Id
@@ -9,16 +11,23 @@ public class Author {
     private Integer id;
     private String name;
     private String email;
-    @OneToOne
-    private Book authorBook;
+    @OneToMany(mappedBy = "author")
+    private List<Book> authorBooks;
 
     public Author() {
     }
 
-    public Author(String name, String email, Book authorBook) {
+    public Author(String name, String email) {
         this.name = name;
         this.email = email;
-        this.authorBook = authorBook;
+    }
+
+    public List<Book> getAuthorBooks() {
+        return authorBooks;
+    }
+
+    public void setAuthorBooks(List<Book> authorBooks) {
+        this.authorBooks = authorBooks;
     }
 
     public Integer getId() {
@@ -43,13 +52,5 @@ public class Author {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Book getAuthorBook() {
-        return authorBook;
-    }
-
-    public void setAuthorBook(Book authorBook) {
-        this.authorBook = authorBook;
     }
 }
