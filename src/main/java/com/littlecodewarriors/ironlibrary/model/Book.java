@@ -2,6 +2,7 @@ package com.littlecodewarriors.ironlibrary.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Book {
@@ -10,6 +11,8 @@ public class Book {
     private String title;
     private String category;
     private Integer quantity;
+    @OneToOne
+    private Author author;
     public Book() {
     }
 
@@ -20,6 +23,13 @@ public class Book {
         this.quantity = quantity;
     }
 
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
 
     public String getIsbn() {
         return isbn;
@@ -52,4 +62,5 @@ public class Book {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
 }
