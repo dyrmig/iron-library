@@ -3,6 +3,7 @@ package com.littlecodewarriors.ironlibrary.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 
@@ -22,15 +23,15 @@ public class Issue {
     }
 
     public Issue(Student issueStudent, Book issueBook) {
-        this.issueDate = "asdsad";//currentDate(0);
-        this.returnDate = currentDate();
+        this.issueDate = currentDate(0);
+        this.returnDate = currentDate(7);
         this.issueStudent = issueStudent;
         this.issueBook = issueBook;
     }
-    public String currentDate(){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
-        LocalDate localDate = LocalDate.now();//.plusDays(additionalDays);
-        return dtf.format(localDate);
+    public String currentDate(int additionalDays){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy  HH:mm");
+        LocalDateTime localDate = LocalDateTime.now().plusDays(additionalDays);
+        return localDate.format(dtf);
     }
     public Integer getId() {
         return id;
