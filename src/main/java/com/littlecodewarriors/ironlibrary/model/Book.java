@@ -22,6 +22,13 @@ public class Book {
         this.category = category;
         this.quantity = quantity;
     }
+    public Book(String isbn, String title, String category, Integer quantity, Author author) {
+        this.isbn = isbn;
+        this.title = title;
+        this.category = category;
+        this.quantity = quantity;
+        this.author = author;
+    }
 
     public Author getAuthor() {
         return author;

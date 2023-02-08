@@ -56,4 +56,11 @@ class BookRepositoryTest {
         Optional<Book> bookOptional = bookRepository.findById(book1.getIsbn());
         assertEquals("Nameee", bookOptional.get().getAuthor().getName());
     }
+//findByTitleContaining
+    @Test
+    void findByTitleContaining(){
+        List<Book> bookOptional = bookRepository.findByTitleContaining("tle");
+        assertEquals(1, bookOptional.size());
+        assertEquals("Title", bookOptional.get(0).getTitle());
+    }
 }
