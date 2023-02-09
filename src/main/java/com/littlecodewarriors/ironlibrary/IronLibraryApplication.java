@@ -1,5 +1,4 @@
 package com.littlecodewarriors.ironlibrary;
-
 import com.littlecodewarriors.ironlibrary.model.Author;
 import com.littlecodewarriors.ironlibrary.model.Book;
 import com.littlecodewarriors.ironlibrary.model.Issue;
@@ -93,15 +92,43 @@ public class IronLibraryApplication implements CommandLineRunner {
 						System.out.println("No matching results");
 					} else {
 						for(Book book: bookList){
-							System.out.println(book.getIsbn()+" "+book.getTitle()+" "+book.getCategory()+" "+book.getQuantity());
+							System.out.println("--------------------------------\n"  + "ISBN: " + book.getIsbn()+" \nTitle: " +book.getTitle()+" \nAuthor: " +book.getAuthor().getName()+" \nCategory: "+book.getCategory()+" \nQuantity available: "+book.getQuantity() + "\n--------------------------------");
 						}
 					}
 					break;
 				case "3":
+					System.out.println("Enter the category of books:");
+					command = scanner.nextLine();
+					List<Book> bookCategoryList = bookRepository.findByCategoryContaining(command);
+					if(bookCategoryList.size()==0){
+						System.out.println("No matching results");
+					} else {
+						for(Book book: bookCategoryList){
+							System.out.println("--------------------------------\n"  + "ISBN: " + book.getIsbn()+" \nTitle: " +book.getTitle()+" \nAuthor: " +book.getAuthor().getName()+" \nCategory: "+book.getCategory()+" \nQuantity available: "+book.getQuantity() + "\n--------------------------------");
+						}
+					}
 					break;
 				case "4":
+					System.out.println("Enter the Author:");
+					command = scanner.nextLine();
+					List<Book> bookAuthorList = authorRepository.findByNameContaining(command);
+					if(bookAuthorList.size()==0){
+						System.out.println("No matching results");
+					} else {
+						for(Book book: bookAuthorList){
+							System.out.println("--------------------------------\n"  + "ISBN: " + book.getIsbn()+" \nTitle: " +book.getTitle()+" \nAuthor: " +book.getAuthor().getName()+" \nCategory: "+book.getCategory()+" \nQuantity available: "+book.getQuantity() + "\n--------------------------------");
+						}
+					}
 					break;
 				case "5":
+					List<Book> allBooks = bookRepository.findAll();
+					if(allBooks.size()==0){
+						System.out.println("No matching results");
+					} else {
+						for(Book book: allBooks){
+							System.out.println("--------------------------------\n"  + "ISBN: " + book.getIsbn()+" \nTitle: " +book.getTitle()+" \nAuthor: " +book.getAuthor().getName()+" \nCategory: "+book.getCategory()+" \nQuantity available: "+book.getQuantity() + "\n--------------------------------");
+						}
+					}
 					break;
 				case "6":
 					System.out.println("Enter usn:");

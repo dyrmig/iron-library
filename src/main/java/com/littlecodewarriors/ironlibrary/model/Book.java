@@ -2,6 +2,7 @@ package com.littlecodewarriors.ironlibrary.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -11,7 +12,7 @@ public class Book {
     private String title;
     private String category;
     private Integer quantity;
-    @OneToOne
+    @ManyToOne
     private Author author;
     public Book() {
     }
