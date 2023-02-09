@@ -2,8 +2,12 @@ package com.littlecodewarriors.ironlibrary;
 
 import com.littlecodewarriors.ironlibrary.model.Author;
 import com.littlecodewarriors.ironlibrary.model.Book;
+import com.littlecodewarriors.ironlibrary.model.Issue;
+import com.littlecodewarriors.ironlibrary.model.Student;
 import com.littlecodewarriors.ironlibrary.repository.AuthorRepository;
 import com.littlecodewarriors.ironlibrary.repository.BookRepository;
+import com.littlecodewarriors.ironlibrary.repository.IssueRepository;
+import com.littlecodewarriors.ironlibrary.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +25,10 @@ public class IronLibraryApplication implements CommandLineRunner {
 	BookRepository bookRepository;
 	@Autowired
 	AuthorRepository authorRepository;
+	@Autowired
+	StudentRepository studentRepository;
+	@Autowired
+	IssueRepository issueRepository;
 	public static void main(String[] args) {
 		SpringApplication.run(IronLibraryApplication.class, args);
 	}
@@ -96,6 +104,40 @@ public class IronLibraryApplication implements CommandLineRunner {
 				case "5":
 					break;
 				case "6":
+					System.out.println("Enter usn:");
+					String issueUsn = scanner.nextLine();
+					System.out.println("Enter name:");
+					String issueName = scanner.nextLine();
+					System.out.println("Enter book ISBN:");
+					String issueIsbn = scanner.nextLine();
+					if(!bookRepository.findById(issueIsbn).isPresent()){
+						System.out.println("Book not found in the system");
+						break;
+					}
+					if(bookRepository.findById(issueIsbn).get().getQuantity()<=0){
+						System.out.println("No copies of this Book available");
+						break;
+					}
+					Optional<Book> optionalBook = bookRepository.findById(issueIsbn);
+					Optional<Student> optionalStudent = studentRepository.findById(issueUsn);
+					if(optionalStudent.isPresent()){
+						optionalBook.get().setQuantity(optionalBook.get().getQuantity()-1);
+						bookRepository.save(optionalBook.get());
+						Issue newIssue = new Issue(optionalStudent.get(), optionalBook.get());
+						issueRepository.save(newIssue);
+						System.out.println("Book issued to "+issueName);
+						System.out.println("Return date: "+newIssue.getReturnDate());
+					} else {
+						optionalBook.get().setQuantity(optionalBook.get().getQuantity()-1);
+						bookRepository.save(optionalBook.get());
+						Student newStudent = new Student(issueUsn, issueName);
+						studentRepository.save(newStudent);
+						Issue newIssue = new Issue(newStudent, optionalBook.get());
+						issueRepository.save(newIssue);
+						System.out.println("Book issued to new student: "+issueName);
+						System.out.println("Return date: "+newIssue.getReturnDate());
+					}
+
 					break;
 				case "7":
 					break;
