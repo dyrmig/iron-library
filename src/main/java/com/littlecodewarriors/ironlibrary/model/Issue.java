@@ -14,7 +14,7 @@ public class Issue {
     private Integer id;
     private String issueDate;
     private String returnDate;
-    @OneToOne
+    @ManyToOne
     private Student issueStudent;
     @OneToOne
     private Book issueBook;

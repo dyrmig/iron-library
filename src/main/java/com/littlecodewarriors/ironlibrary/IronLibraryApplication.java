@@ -7,6 +7,7 @@ import com.littlecodewarriors.ironlibrary.repository.AuthorRepository;
 import com.littlecodewarriors.ironlibrary.repository.BookRepository;
 import com.littlecodewarriors.ironlibrary.repository.IssueRepository;
 import com.littlecodewarriors.ironlibrary.repository.StudentRepository;
+import com.littlecodewarriors.ironlibrary.util.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -35,7 +36,7 @@ public class IronLibraryApplication implements CommandLineRunner {
 	//Comment all in: public void run(String... args) throws Exception, in order to make the tests work
 	@Override
 	public void run(String... args) throws Exception {
-
+		Option.start();
 		Scanner scanner = new Scanner(System.in);
 		help();
 		System.out.println("Introduce your command:");
@@ -111,13 +112,20 @@ public class IronLibraryApplication implements CommandLineRunner {
 				case "4":
 					System.out.println("Enter the Author:");
 					command = scanner.nextLine();
-					List<Book> bookAuthorList = authorRepository.findByNameContaining(command);
+					if(command.length()<4){
+						System.out.println("Minimun 4 characters for search by author name");
+					}
+					List<Author> bookAuthorList = authorRepository.findByNameContainingWithBooks(command);
+
 					if(bookAuthorList.size()==0){
 						System.out.println("No matching results");
 					} else {
-						for(Book book: bookAuthorList){
-							System.out.println("--------------------------------\n"  + "ISBN: " + book.getIsbn()+" \nTitle: " +book.getTitle()+" \nAuthor: " +book.getAuthor().getName()+" \nCategory: "+book.getCategory()+" \nQuantity available: "+book.getQuantity() + "\n--------------------------------");
+						for(Author author: bookAuthorList){
+							for(Book book: author.getAuthorBooks()){
+								System.out.println("--------------------------------\n"  + "ISBN: " + book.getIsbn()+" \nTitle: " +book.getTitle()+" \nAuthor: " +book.getAuthor().getName()+" \nCategory: "+book.getCategory()+" \nQuantity available: "+book.getQuantity() + "\n--------------------------------");
+							}
 						}
+
 					}
 					break;
 				case "5":
@@ -152,6 +160,8 @@ public class IronLibraryApplication implements CommandLineRunner {
 						bookRepository.save(optionalBook.get());
 						Issue newIssue = new Issue(optionalStudent.get(), optionalBook.get());
 						issueRepository.save(newIssue);
+						optionalStudent.get().setIssuedBooks(List.of(newIssue));
+						studentRepository.save(optionalStudent.get());
 						System.out.println("Book issued to "+issueName);
 						System.out.println("Return date: "+newIssue.getReturnDate());
 					} else {
@@ -161,12 +171,24 @@ public class IronLibraryApplication implements CommandLineRunner {
 						studentRepository.save(newStudent);
 						Issue newIssue = new Issue(newStudent, optionalBook.get());
 						issueRepository.save(newIssue);
+						newStudent.setIssuedBooks(List.of(newIssue));
+						studentRepository.save(newStudent);
 						System.out.println("Book issued to new student: "+issueName);
 						System.out.println("Return date: "+newIssue.getReturnDate());
 					}
 
 					break;
 				case "7":
+					System.out.println("Enter student usn:");
+					String studentUsn = scanner.nextLine();
+					Optional<Student> studentOptional = studentRepository.findByUsnWithBooks(studentUsn);
+					if(!studentOptional.isPresent()){
+						System.out.println("Student not found");
+					} else {
+						for(Issue issue: studentOptional.get().getIssuedBooks()){
+							System.out.println("--------------------------------\n"  + "ISBN: " + issue.getIssueBook().getIsbn()+" \nTitle: " +issue.getIssueBook().getTitle()+" \nAuthor: " +issue.getIssueBook().getAuthor().getName()+" \nCategory: "+issue.getIssueBook().getCategory()+" \nQuantity available: "+issue.getIssueBook().getQuantity() + "\n--------------------------------");
+						}
+					}
 					break;
 				case "8":
 					SpringApplication.run(IronLibraryApplication.class, args).close();

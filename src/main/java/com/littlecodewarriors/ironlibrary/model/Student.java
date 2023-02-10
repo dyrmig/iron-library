@@ -2,12 +2,17 @@ package com.littlecodewarriors.ironlibrary.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+import java.util.List;
 
 @Entity
 public class Student {
     @Id
     private String usn;
     private String name;
+    @OneToMany(mappedBy = "issueStudent")
+    private List<Issue> issuedBooks;
 
     public Student() {
     }
@@ -30,5 +35,13 @@ public class Student {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Issue> getIssuedBooks() {
+        return issuedBooks;
+    }
+
+    public void setIssuedBooks(List<Issue> issuedBooks) {
+        this.issuedBooks = issuedBooks;
     }
 }
